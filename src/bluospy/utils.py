@@ -1,5 +1,5 @@
 import xml.etree.ElementTree as ET
-
+import bluospy.data as data
 
 def status_xml_to_dict(status_xml):
     status = ET.fromstring(status_xml)
@@ -17,12 +17,8 @@ def playlist_xml_to_dict(playlist_xml):
     songs = []
     for child in playlist:
         if child.tag == "song":
-            song = {}
-            for k, v in child.attrib.items():
-                song[k] = v
-            for song_props in child:
-                song[song_props.tag] = song_props.text
-            songs.append(song)
+            track = data.Track(child)
+            songs.append(track)
         else:
             pdict[child.tag] = child.text
     pdict["songs"] = songs

@@ -142,5 +142,14 @@ class Player:
         else:
             return utils.error_dict(res.status_code, res.text)
 
+    @property
     def repeat(self):
-        pass
+        return bool(self.status["repeat"])
+
+    @repeat.setter
+    def repeat(self,rstate):
+        res = requests.get(self.base_url + "/Repeat?" + f"state={int(rstate)}")
+        if res.status_code == 200:
+            return utils.playlist_xml_to_dict(res.text)
+        else:
+            return utils.error_dict(res.status_code, res.text)
