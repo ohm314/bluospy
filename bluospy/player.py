@@ -1,7 +1,7 @@
 import requests
 import urllib.parse
 
-import bluospy.utils as utils
+from bluospy.utils import playlist_xml_to_dict, status_xml_to_dict, error_dict, volume_xml_to_dict
 
 
 class Player:
@@ -15,19 +15,19 @@ class Player:
     def status(self):
         res = requests.get(self.base_url + "/Status")
         if res.status_code == 200:
-            return utils.status_xml_to_dict(res.text)
+            return status_xml_to_dict(res.text)
         else:
-            return utils.error_dict(res.status_code, res.text)
+            return error_dict(res.status_code, res.text)
 
     # Volume control
 
     def get_volume(self):
         res = requests.get(self.base_url + "/Volume")
         if res.status_code == 200:
-            vdict = utils.volume_xml_to_dict(res.text)
+            vdict = volume_xml_to_dict(res.text)
             return vdict
         else:
-            return utils.error_dict(res.status_code, res.text)
+            return error_dict(res.status_code, res.text)
 
     def set_volume(
         self, level=None, abs_db=None, db=None, tell_slaves=True, mute=False
@@ -49,10 +49,10 @@ class Player:
         res = requests.get(self.base_url + api_call)
 
         if res.status_code == 200:
-            vdict = utils.volume_xml_to_dict(res.text)
+            vdict = volume_xml_to_dict(res.text)
             return vdict
         else:
-            return utils.error_dict(res.status_code, res.text)
+            return error_dict(res.status_code, res.text)
 
     @property
     def volume(self):
@@ -98,37 +98,37 @@ class Player:
         args = "?" + "&".join([arg for arg in [stream_arg, seek_arg] if arg != ""])
         res = requests.get(self.base_url + "/Play" + args)
         if res.status_code == 200:
-            return utils.status_xml_to_dict(res.text)
+            return status_xml_to_dict(res.text)
         else:
-            return utils.error_dict(res.status_code, res.text)
+            return error_dict(res.status_code, res.text)
 
     def pause(self, toggle=False):
         res = requests.get(self.base_url + "/Pause?" + f"toggle={int(toggle)}")
         if res.status_code == 200:
-            return utils.status_xml_to_dict(res.text)
+            return status_xml_to_dict(res.text)
         else:
-            return utils.error_dict(res.status_code, res.text)
+            return error_dict(res.status_code, res.text)
 
     def stop(self):
         res = requests.get(self.base_url + "/Stop")
         if res.status_code == 200:
-            return utils.status_xml_to_dict(res.text)
+            return status_xml_to_dict(res.text)
         else:
-            return utils.error_dict(res.status_code, res.text)
+            return error_dict(res.status_code, res.text)
 
     def skip(self):
         res = requests.get(self.base_url + "/Skip")
         if res.status_code == 200:
-            return utils.status_xml_to_dict(res.text)
+            return status_xml_to_dict(res.text)
         else:
-            return utils.error_dict(res.status_code, res.text)
+            return error_dict(res.status_code, res.text)
 
     def back(self):
         res = requests.get(self.base_url + "/Back")
         if res.status_code == 200:
-            return utils.status_xml_to_dict(res.text)
+            return status_xml_to_dict(res.text)
         else:
-            return utils.error_dict(res.status_code, res.text)
+            return error_dict(res.status_code, res.text)
 
     @property
     def shuffle(self):
@@ -137,10 +137,8 @@ class Player:
     @shuffle.setter
     def shuffle(self, shuffled):
         res = requests.get(self.base_url + "/Shuffle?" + f"state={int(shuffled)}")
-        if res.status_code == 200:
-            return utils.playlist_xml_to_dict(res.text)
-        else:
-            return utils.error_dict(res.status_code, res.text)
+        if res.status_code != 200:
+            raise RuntimeError(f"HTTP{res.status_code}: {res.text}")
 
     @property
     def repeat(self):
@@ -149,7 +147,5 @@ class Player:
     @repeat.setter
     def repeat(self,rstate):
         res = requests.get(self.base_url + "/Repeat?" + f"state={int(rstate)}")
-        if res.status_code == 200:
-            return utils.playlist_xml_to_dict(res.text)
-        else:
-            return utils.error_dict(res.status_code, res.text)
+        if res.status_code != 200:
+            raise RuntimeError(f"HTTP{res.status_code}: {res.text}")

@@ -46,5 +46,5 @@ class Playlist:
     modified: bool
     length: int
     playlist_id: int
-    tracks: typing.List[Track] = []
+    tracks: typing.List[Track]
 
