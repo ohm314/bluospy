@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 import bluospy.data as data
 
+
 def status_xml_to_dict(status_xml):
     status = ET.fromstring(status_xml)
     sdict = {}

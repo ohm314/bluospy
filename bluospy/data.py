@@ -3,10 +3,12 @@ from dataclasses import dataclass
 import typing
 from collections import namedtuple
 
+
 class RepeatState(Enum):
     QUEUE = 0
     TRACK = 1
-    OFF   = 2
+    OFF = 2
+
 
 @dataclass
 class Track:
@@ -21,22 +23,22 @@ class Track:
 
     def __init__(self, xml_tag):
         for k, v in xml_tag.attrib.items():
-            if k == 'albumid':
+            if k == "albumid":
                 self.album_id = int(v)
-            elif k == 'service':
+            elif k == "service":
                 self.service = v
-            elif k == 'artistid':
+            elif k == "artistid":
                 self.artist_id = int(v)
-            elif k == 'songid':
+            elif k == "songid":
                 self.track_id = int(v)
-            elif k == 'id':
+            elif k == "id":
                 self.pos = int(v)
         for song_props in xml_tag:
-            if song_props.tag == 'title':
+            if song_props.tag == "title":
                 self.title = song_props.text
-            elif song_props.tag == 'art':
+            elif song_props.tag == "art":
                 self.artist = song_props.text
-            elif song_props.tag == 'alb':
+            elif song_props.tag == "alb":
                 self.album = song_props.text
 
 
@@ -47,4 +49,3 @@ class Playlist:
     length: int
     playlist_id: int
     tracks: typing.List[Track]
-

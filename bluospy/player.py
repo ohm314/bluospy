@@ -1,7 +1,12 @@
 import requests
 import urllib.parse
 
-from bluospy.utils import playlist_xml_to_dict, status_xml_to_dict, error_dict, volume_xml_to_dict
+from bluospy.utils import (
+    playlist_xml_to_dict,
+    status_xml_to_dict,
+    error_dict,
+    volume_xml_to_dict,
+)
 
 
 class Player:
@@ -145,7 +150,7 @@ class Player:
         return bool(self.status["repeat"])
 
     @repeat.setter
-    def repeat(self,rstate):
+    def repeat(self, rstate):
         res = requests.get(self.base_url + "/Repeat?" + f"state={int(rstate)}")
         if res.status_code != 200:
             raise RuntimeError(f"HTTP{res.status_code}: {res.text}")
